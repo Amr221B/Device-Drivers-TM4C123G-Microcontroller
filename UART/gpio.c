@@ -1,3 +1,8 @@
+/*
+ * gpio.c
+ *  	Created on: 11/7/2019
+ *  	Author: Amr Halim
+ */
 #include "gpio.h"
 void PORTx_ActivateClock(uint8_t port){ volatile unsigned long delay;
   SYSCTL_RCGC2_R |= port;     // activate clock for Port x
