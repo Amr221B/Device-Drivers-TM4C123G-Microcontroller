@@ -1,8 +1,5 @@
 /*
  * uart.c
- *
- * This library is responsible for manipule the UART module on Tiva C-Series TM4C123G
- *
  *  	Created on: 13/7/2019
  *      Author: Amr Halim
  */
