@@ -1,3 +1,11 @@
+/*
+ * uart.h
+ *
+ * This library is responsible for manipule the UART module on Tiva C-Series TM4C123G
+ *
+ *  	Created on: 13/7/2019
+ *      Author: Amr Halim
+ */
 //prevents double inclusion
 #ifndef UART_H_
 #define UART_H_
