@@ -28,7 +28,10 @@
 #define PORTA_EnableDigital(pinNumber) (GPIO_PORTA_DEN_R |= pinNumber)
 #define PORTA_DisableAlternateFunctionSelect(pinNumber) (GPIO_PORTA_AFSEL_R &= ~pinNumber)
 #define PORTA_EnableAlternateFunctionSelect(pinNumber) (GPIO_PORTA_AFSEL_R |= pinNumber)
-#define PORTA_PortControlFuction(functionCode) (GPIO_PORTA_PCTL_R |= functionCode)
+#define PORTA_PortControlFuction(functionCode) {\
+																									GPIO_PORTA_PCTL_R &= ~functionCode;\
+																									GPIO_PORTA_PCTL_R |= functionCode;\
+																							 }
 #define PORTA_ClearBit(pinNumber)(GPIO_PORTA_DATA_R &= ~pinNumber)
 #define PORTA_SetBit(pinNumber)(GPIO_PORTA_DATA_R |= pinNumber)
 #define PORTA_Data(data)(GPIO_PORTA_DATA_R = data)			
@@ -46,7 +49,10 @@
 #define PORTB_EnableDigital(pinNumber) (GPIO_PORTB_DEN_R |= pinNumber)
 #define PORTB_DisableAlternateFunctionSelect(pinNumber) (GPIO_PORTB_AFSEL_R &= ~pinNumber)
 #define PORTB_EnableAlternateFunctionSelect(pinNumber) (GPIO_PORTB_AFSEL_R |= pinNumber)
-#define PORTB_PortControlFuction(functionCode) (GPIO_PORTB_PCTL_R |= functionCode)
+#define PORTB_PortControlFuction(functionCode) {\
+																									GPIO_PORTB_PCTL_R &= ~functionCode;\
+																									GPIO_PORTB_PCTL_R |= functionCode;\
+																							 }
 #define PORTB_ClearBit(pinNumber) (GPIO_PORTB_DATA_R &= ~pinNumber)
 #define PORTB_SetBit(pinNumber) (GPIO_PORTB_DATA_R |= pinNumber)
 #define PORTB_Data(data) (GPIO_PORTB_DATA_R = data)		
@@ -64,7 +70,10 @@
 #define PORTC_EnableDigital(pinNumber) (GPIO_PORTC_DEN_R |= pinNumber)
 #define PORTC_DisableAlternateFunctionSelect(pinNumber) (GPIO_PORTC_AFSEL_R &= ~pinNumber)
 #define PORTC_EnableAlternateFunctionSelect(pinNumber) (GPIO_PORTC_AFSEL_R |= pinNumber)
-#define PORTC_PortControlFuction(pinNumber) (GPIO_PORTC_PCTL_R |= pinNumber)
+#define PORTC_PortControlFuction(functionCode) {\
+																									GPIO_PORTC_PCTL_R &= ~functionCode;\
+																									GPIO_PORTC_PCTL_R |= functionCode;\
+																							 }
 #define PORTC_ClearBit(pinNumber) (GPIO_PORTC_DATA_R &= ~pinNumber)
 #define PORTC_SetBit(pinNumber) (GPIO_PORTC_DATA_R |= pinNumber)
 #define PORTC_Data(data) (GPIO_PORTC_DATA_R = data)				
@@ -82,7 +91,10 @@
 #define PORTD_EnableDigital(pinNumber) (GPIO_PORTD_DEN_R |= pinNumber)
 #define PORTD_DisableAlternateFunctionSelect(pinNumber) (GPIO_PORTD_AFSEL_R &= ~pinNumber)
 #define PORTD_EnableAlternateFunctionSelect(pinNumber) (GPIO_PORTD_AFSEL_R |= pinNumber)
-#define PORTD_PortControlFuction(pinNumber) (GPIO_PORTD_PCTL_R |= pinNumber)
+#define PORTD_PortControlFuction(functionCode) {\
+																									GPIO_PORTD_PCTL_R &= ~functionCode;\
+																									GPIO_PORTD_PCTL_R |= functionCode;\
+																							 }
 #define PORTD_ClearBit(pinNumber) (GPIO_PORTD_DATA_R &= ~pinNumber)
 #define PORTD_SetBit(pinNumber) (GPIO_PORTD_DATA_R |= pinNumber)
 #define PORTD_Data(data) (GPIO_PORTD_DATA_R = data)		
@@ -100,7 +112,10 @@
 #define PORTE_EnableDigital(pinNumber) (GPIO_PORTE_DEN_R |= pinNumber)
 #define PORTE_DisableAlternateFunctionSelect(pinNumber) (GPIO_PORTE_AFSEL_R &= ~pinNumber)
 #define PORTE_EnableAlternateFunctionSelect(pinNumber) (GPIO_PORTE_AFSEL_R |= pinNumber)
-#define PORTE_PortControlFuction(pinNumber) (GPIO_PORTE_PCTL_R |= pinNumber)
+#define PORTE_PortControlFuction(functionCode) {\
+																									GPIO_PORTE_PCTL_R &= ~functionCode;\
+																									GPIO_PORTE_PCTL_R |= functionCode;\
+																							 }
 #define PORTE_ClearBit(pinNumber) (GPIO_PORTE_DATA_R &= ~pinNumber)
 #define PORTE_SetBit(pinNumber) (GPIO_PORTE_DATA_R |= pinNumber)
 #define PORTE_Data(data) (GPIO_PORTE_DATA_R = data)							
@@ -118,7 +133,10 @@
 #define PORTF_EnableDigital(pinNumber) (GPIO_PORTF_DEN_R |= pinNumber)
 #define PORTF_DisableAlternateFunctionSelect(pinNumber) (GPIO_PORTF_AFSEL_R &= ~pinNumber)
 #define PORTF_EnableAlternateFunctionSelect(pinNumber) (GPIO_PORTF_AFSEL_R |= pinNumber)
-#define PORTF_PortControlFuction(pinNumber) (GPIO_PORTF_PCTL_R |= pinNumber)
+#define PORTF_PortControlFuction(functionCode) {\
+																									GPIO_PORTF_PCTL_R &= ~functionCode;\
+																									GPIO_PORTF_PCTL_R |= functionCode;\
+																							 }
 #define PORTF_ClearBit(pinNumber) (GPIO_PORTF_DATA_R &= ~pinNumber)
 #define PORTF_SetBit(pinNumber) (GPIO_PORTF_DATA_R |= pinNumber)
 #define PORTF_Data(data) (GPIO_PORTF_DATA_R = data)					
