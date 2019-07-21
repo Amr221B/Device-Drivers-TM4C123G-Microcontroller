@@ -438,7 +438,7 @@ void UART5_sendReceiveDataASync(uint8_t *tx, uint8_t *rx, uint16_t txSize, uint1
 					//to select 7/8 of fifo
 					i=4;
 				}
-				if((i==4)&&(rxSize%UART_7_8_FIFO)){
+				if(i==4){
 					//Clear Interrupt flag
 					UART5_ICR_R |= UART_ICR_RTIC;
 					//Enable UART5 rx timeout interrupt
