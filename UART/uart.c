@@ -343,24 +343,19 @@ void UART5_init(UART_registerType *config){
 void UART5_sendReceiveDataSync(uint8_t *tx, uint8_t *rx, uint16_t txSize, uint16_t rxSize){
 	uint16_t i=0, j=0;
 	UART2_LCRH_R |= UART_LCRH_FEN;
-	while(((tx)&&(i<txSize))||((rx)&&(j<rxSize))){
+	do{
 		//check if there is data to transfer.
-		if(tx&&i<txSize){
-			if(!(UART5_FR_R&UART_FR_TXFF)){
-				UART5_DR_R = tx[i++];
-			}
+		if((tx)&&((i<txSize)||(txSize==0))){
+			while(UART2_FR_R&UART_FR_TXFF);
+			UART2_DR_R = tx[i++];
 		}
 		//check if there is data to receive.
-		if(rx&&j<rxSize){
-			if(!(UART5_FR_R&UART_FR_RXFE)){
-				rx[j++] = UART5_DR_R;
-			}
+		if((rx)&&(j<rxSize)){
+			while(UART2_FR_R&UART_FR_RXFE);
+			rx[j++] = UART2_DR_R;
 		}
-	}
+	}while(((tx[i]!='\0')&&(tx)&&((i<txSize)||(txSize==0)))||((rx[j]!='\0')&&(rx)&&(j<rxSize)));
 }
-
-
-
 void UART5_sendReceiveDataASync(uint8_t *tx, uint8_t *rx, uint16_t txSize, uint16_t rxSize, uint8_t priority, uint8_t *txSemaphore, uint8_t *rxSemaphore){
 	uint8_t i=0, numberOfBytesToSend=0;
 	uint8_t fifoLevels[4]={UART_1_8_FIFO, UART_2_8_FIFO, UART_4_8_FIFO, UART_6_8_FIFO};
