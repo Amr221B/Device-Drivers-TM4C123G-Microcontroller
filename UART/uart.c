@@ -30,7 +30,7 @@
 #define UART_moduleEnable(module) (SYSCTL_RCGCUART_R |= module)
 
 volatile static uint8_t *UART2_txBuff;
-volatile static uint16_t *UART2_rxBuff;
+volatile static uint8_t *UART2_rxBuff;
 static uint16_t UART2_txBuffSize;
 static uint16_t UART2_rxBuffSize;
 volatile static uint8_t *UART2_txSemaphore;
@@ -41,7 +41,7 @@ static void (*UART2_parityErrorCallBackFunction)(void);
 static void (*UART2_framingErrorCallBackFunction)(void);
 
 volatile static uint8_t *UART5_txBuff;
-volatile static uint16_t *UART5_rxBuff;
+volatile static uint8_t *UART5_rxBuff;
 static uint16_t UART5_txBuffSize;
 static uint16_t UART5_rxBuffSize;
 volatile static uint8_t *UART5_txSemaphore;
@@ -66,7 +66,7 @@ void UART2_init(UART_registerType *config){
 	PORTx_ActivateClock(PORTD);	
 	PORTD_UnlockPinPD7();
 	//Set the GPIO AFSEL bits for the appropriate pins
-	PORTD_DisableAnakogModeSelect(PIN6|PIN6);
+	PORTD_DisableAnakogModeSelect(PIN6|PIN7);
 	PORTD_EnableDigital(PIN6|PIN7);
 	PORTD_EnableAlternateFunctionSelect(PIN6|PIN7);		
 	//Configure the PMCn fields in the GPIOPCTL register to assign the SSI signals
@@ -86,29 +86,23 @@ void UART2_init(UART_registerType *config){
 	//enable UART
 	UART2_CTL_R |= UART_CTL_UARTEN;
 }
-void UART2_sendReceiveDataSync(uint8_t *tx, uint16_t *rx, uint16_t txSize, uint16_t rxSize){
+void UART2_sendReceiveDataSync(uint8_t *tx, uint8_t *rx, uint16_t txSize, uint16_t rxSize){
 	uint16_t i=0, j=0;
 	UART2_LCRH_R |= UART_LCRH_FEN;
-	while(((tx)&&(i<txSize))||((rx)&&(j<rxSize))){
+	do{
 		//check if there is data to transfer.
-		if(tx&&i<txSize){
-			if(!(UART2_FR_R&UART_FR_TXFF)){
-				UART2_DR_R = tx[i++];
-			}
+		if((tx)&&((i<txSize)||(txSize==0))){
+			while(UART2_FR_R&UART_FR_TXFF);
+			UART2_DR_R = tx[i++];
 		}
 		//check if there is data to receive.
-		if(rx&&j<rxSize){
-			if(!(UART2_FR_R&UART_FR_RXFE)){
-				rx[j++] = UART2_DR_R;
-			}
+		if((rx)&&(j<rxSize)){
+			while(UART2_FR_R&UART_FR_RXFE);
+			rx[j++] = UART2_DR_R;
 		}
-	}
+	}while(((tx[i]!='\0')&&(tx)&&((i<txSize)||(txSize==0)))||((rx[j]!='\0')&&(rx)&&(j<rxSize)));
 }
-
-
-
-
-void UART2_sendReceiveDataASync(uint8_t *tx, uint16_t *rx, uint16_t txSize, uint16_t rxSize, uint8_t priority, uint8_t *txSemaphore, uint8_t *rxSemaphore){
+void UART2_sendReceiveDataASync(uint8_t *tx, uint8_t *rx, uint16_t txSize, uint16_t rxSize, uint8_t priority, uint8_t *txSemaphore, uint8_t *rxSemaphore){
 	uint8_t i=0, numberOfBytesToSend=0;
 	uint8_t fifoLevels[4]={UART_1_8_FIFO, UART_2_8_FIFO, UART_4_8_FIFO, UART_6_8_FIFO};
 	UART2_IFLS_R=0;
@@ -158,6 +152,7 @@ void UART2_sendReceiveDataASync(uint8_t *tx, uint16_t *rx, uint16_t txSize, uint
 		}
 		//if there is a data to receive
 		if(rx){
+			i=0;
 			UART2_rxBuff=rx;
 			UART2_rxBuffSize=rxSize;
 			UART2_rxSemaphore=rxSemaphore;
@@ -184,7 +179,7 @@ void UART2_sendReceiveDataASync(uint8_t *tx, uint16_t *rx, uint16_t txSize, uint
 					//to select 7/8 of fifo
 					i=4;
 				}
-				if((i==4)&&(rxSize%UART_7_8_FIFO)){
+				if(i==4){
 					//Clear Interrupt flag
 					UART2_ICR_R |= UART_ICR_RTIC;
 					//Enable UART5 rx timeout interrupt
@@ -233,7 +228,7 @@ void UART2_Handler(void){
 			do{
 				//send bytes till find '\0' or i=tx buffer size or send maximum of 14 bytes at a time
 				UART2_DR_R = UART2_txBuff[i];
-			}while((UART2_txBuff[i++]!='\0')&&(i<UART2_txBuffSize)&&(i%UART_7_8_FIFO));
+			}while((UART2_txBuff[i++]!='\0')&&((i<UART2_txBuffSize)||(UART2_txBuffSize==0))&&(i%UART_7_8_FIFO));
 			//ack tx interrupt
 			UART2_ICR_R |= UART_ICR_TXIC;
 			//if last byte sent is '\0' or total data sent=tx buffer size
@@ -310,6 +305,7 @@ void UART2_Handler(void){
 
 
 
+
 void UART5_init(UART_registerType *config){
 	uint8_t clkDiv;
 	uint32_t fraction;
@@ -344,7 +340,7 @@ void UART5_init(UART_registerType *config){
 	//enable UART
 	UART5_CTL_R |= UART_CTL_UARTEN;
 }
-void UART5_sendReceiveDataSync(uint8_t *tx, uint16_t *rx, uint16_t txSize, uint16_t rxSize){
+void UART5_sendReceiveDataSync(uint8_t *tx, uint8_t *rx, uint16_t txSize, uint16_t rxSize){
 	uint16_t i=0, j=0;
 	UART2_LCRH_R |= UART_LCRH_FEN;
 	while(((tx)&&(i<txSize))||((rx)&&(j<rxSize))){
@@ -365,7 +361,7 @@ void UART5_sendReceiveDataSync(uint8_t *tx, uint16_t *rx, uint16_t txSize, uint1
 
 
 
-void UART5_sendReceiveDataASync(uint8_t *tx, uint16_t *rx, uint16_t txSize, uint16_t rxSize, uint8_t priority, uint8_t *txSemaphore, uint8_t *rxSemaphore){
+void UART5_sendReceiveDataASync(uint8_t *tx, uint8_t *rx, uint16_t txSize, uint16_t rxSize, uint8_t priority, uint8_t *txSemaphore, uint8_t *rxSemaphore){
 	uint8_t i=0, numberOfBytesToSend=0;
 	uint8_t fifoLevels[4]={UART_1_8_FIFO, UART_2_8_FIFO, UART_4_8_FIFO, UART_6_8_FIFO};
 	UART5_IFLS_R=0;
@@ -415,6 +411,7 @@ void UART5_sendReceiveDataASync(uint8_t *tx, uint16_t *rx, uint16_t txSize, uint
 		}
 		//if there is a data to receive
 		if(rx){
+			i=0;
 			UART5_rxBuff=rx;
 			UART5_rxBuffSize=rxSize;
 			UART5_rxSemaphore=rxSemaphore;
@@ -492,7 +489,7 @@ void UART5_Handler(void){
 			do{
 				//send bytes till find '\0' or i=tx buffer size or send maximum of 14 bytes at a time
 				UART5_DR_R = UART5_txBuff[i];
-			}while((UART5_txBuff[i++]!='\0')&&(i<UART5_txBuffSize)&&(i%UART_7_8_FIFO));
+			}while((UART5_txBuff[i++]!='\0')&&((i<UART5_txBuffSize)||(UART5_txBuffSize==0))&&(i%UART_7_8_FIFO));
 			//ack tx interrupt
 			UART5_ICR_R |= UART_ICR_TXIC;
 			//if last byte sent is '\0' or total data sent=tx buffer size
