@@ -129,10 +129,9 @@ void UART2_init(UART_registerType *config);
 				If the txSize=0 this will mean that a string will be transmitted.
 			rxSize:
 				This variable contains the size of the receiving array.
-				If the rxSize=0 this will mean that a string will be received.
 [Returns]	No return.
 --------------------------------------------------------------------------------------------------------------------------------*/
-void UART2_sendReceiveDataSync(uint8_t *tx, uint16_t *rx, uint16_t txSize, uint16_t rxSize);
+void UART2_sendReceiveDataSync(uint8_t *tx, uint8_t *rx, uint16_t txSize, uint16_t rxSize);
 /*--------------------------------------------------------------------------------------------------------------------------------
 [Function Name]: UART2_sendReceiveDataASync.
 [Description]: This function is responsible for sending and receiving data bytes Asynchronous.
@@ -146,7 +145,6 @@ void UART2_sendReceiveDataSync(uint8_t *tx, uint16_t *rx, uint16_t txSize, uint1
 				If the txSize=0 this will mean that a string will be transmitted.
 			rxSize:
 				This variable contains the size of the receiving array.
-				If the rxSize=0 this will mean that a string will be received.
 			priority:
 				This variable contains the priority of the UART interrupt (from 0[highest] to 7[lowest]).
 			txSemaphore:
@@ -155,7 +153,7 @@ void UART2_sendReceiveDataSync(uint8_t *tx, uint16_t *rx, uint16_t txSize, uint1
 				This is a pointer to a variable that will contain the Acknowledgment of completing the Receiption.
 [Returns]	No return.
 --------------------------------------------------------------------------------------------------------------------------------*/
-void UART2_sendReceiveDataASync(uint8_t *tx, uint16_t *rx, uint16_t txSize, uint16_t rxSize, uint8_t priority, uint8_t *txSemaphore, uint8_t *rxSemaphore);
+void UART2_sendReceiveDataASync(uint8_t *tx, uint8_t *rx, uint16_t txSize, uint16_t rxSize, uint8_t priority, uint8_t *txSemaphore, uint8_t *rxSemaphore);
 /*--------------------------------------------------------------------------------------------------------------------------------
 [Function Name]: UART2_setErrorsCallBackFunction.
 [Description]: This function is responsible for enabling interrupt and setting the callback functions for the UART error flags.
@@ -174,8 +172,8 @@ void UART2_setErrorsCallBackFunction(void (*overrunError)(void), void (*parityEr
 #endif
 #ifdef UART_5_
 void UART5_init(UART_registerType *config);
-void UART2_sendReceiveDataSync(uint8_t *tx, uint16_t *rx, uint16_t txSize, uint16_t rxSize);
-void UART5_sendReceiveDataASync(uint8_t *tx, uint16_t *rx, uint16_t txSize, uint16_t rxSize, uint8_t priority, uint8_t *txSemaphore, uint8_t *rxSemaphore);
+void UART2_sendReceiveDataSync(uint8_t *tx, uint8_t *rx, uint16_t txSize, uint16_t rxSize);
+void UART5_sendReceiveDataASync(uint8_t *tx, uint8_t *rx, uint16_t txSize, uint16_t rxSize, uint8_t priority, uint8_t *txSemaphore, uint8_t *rxSemaphore);
 void UART2_setErrorsCallBackFunction(void (*overrunError)(void), void (*parityError)(void), void (*framingError)(void), void (*breakError)(void));
 #endif
 #endif
